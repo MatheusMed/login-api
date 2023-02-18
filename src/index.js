@@ -60,6 +60,6 @@ app.get('/feedTodos', (req, res) => __awaiter(void 0, void 0, void 0, function* 
     });
     res.json(posts);
 }));
-app.listen(3000, () => {
-    console.log('Server running on http://localhost:3000');
+app.listen(5943, () => {
+    console.log('Server running on http://localhost:5943');
 });
