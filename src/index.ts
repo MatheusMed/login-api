@@ -37,7 +37,7 @@ app.post('/login', async (req, res) => {
     return res.status(401).json({ message: 'Invalid email or password' });
   }
 
-  
+
 
  
   const passwordMatch = await bcrypt.compare(password, user.password);
@@ -71,6 +71,6 @@ app.get('/feedTodos', async (req, res) => {
 })
 
 
-app.listen(3000, () => {
-  console.log('Server running on http://localhost:3000')
+app.listen(5943, () => {
+  console.log('Server running on http://localhost:5943')
 })
