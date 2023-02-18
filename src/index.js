@@ -20,15 +20,20 @@ const app = (0, express_1.default)();
 app.use(body_parser_1.default.json());
 app.post('/signup', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, email, password } = req.body;
-    const hashedPassword = yield bcrypt_1.default.hash(password, 10);
-    const user = yield prisma_conect_1.default.user.create({
-        data: {
-            name,
-            email,
-            password: hashedPassword,
-        },
-    });
-    res.json(user);
+    try {
+        const hashedPassword = yield bcrypt_1.default.hash(password, 10);
+        const user = yield prisma_conect_1.default.user.create({
+            data: {
+                name,
+                email,
+                password: hashedPassword,
+            },
+        });
+        res.json(user);
+    }
+    catch (error) {
+        return res.status(500).json({ message: "Erro ao criar usuario" });
+    }
 }));
 app.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = req.body;
@@ -44,21 +49,31 @@ app.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
     return res.status(200).json({ message: "Login com sucesso" });
 }));
-app.post(`/todos`, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.post('/todos', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { titulo, content, color, completed, email } = req.body;
-    const result = yield prisma_conect_1.default.todos.create({
-        data: {
-            titulo, content, color, completed,
-            author: { connect: { email } },
-        },
-    });
-    res.json(result);
+    try {
+        const result = yield prisma_conect_1.default.todos.create({
+            data: {
+                titulo, content, color, completed,
+                author: { connect: { email } },
+            },
+        });
+        return res.status(200).json(result);
+    }
+    catch (error) {
+        return res.status(500).json({ message: " Erro ao criar sua nota" });
+    }
 }));
 app.get('/feedTodos', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const posts = yield prisma_conect_1.default.todos.findMany({
-        include: { author: false }
-    });
-    res.json(posts);
+    try {
+        const posts = yield prisma_conect_1.default.todos.findMany({
+            include: { author: false }
+        });
+        return res.status(200).json(posts);
+    }
+    catch (error) {
+        return res.status(500).json({ message: "Erro ao fazer a lista da sua listinha" });
+    }
 }));
 app.listen(5943, () => {
     console.log('Server running on http://localhost:5943');

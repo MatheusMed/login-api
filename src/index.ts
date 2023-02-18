@@ -12,17 +12,21 @@ app.use(bodyParser.json());
 app.post('/signup', async (req, res) => {
   const { name, email, password } = req.body;
 
-  const hashedPassword = await bcrypt.hash(password, 10);
-
-  const user = await prisma.user.create({
-    data: {
-      name,
-      email,
-      password: hashedPassword,
-    },
-  });
-
-  res.json(user);
+ try {
+   const hashedPassword = await bcrypt.hash(password, 10);
+ 
+   const user = await prisma.user.create({
+     data: {
+       name,
+       email,
+       password: hashedPassword,
+     },
+   });
+ 
+   res.json(user);
+ } catch (error) {
+  return res.status(500).json({message:"Erro ao criar usuario" });
+ }
 });
 
 app.post('/login', async (req, res) => {
@@ -32,14 +36,10 @@ app.post('/login', async (req, res) => {
     where: { email },
   });
 
-
   if (!user) {
     return res.status(401).json({ message: 'Invalid email or password' });
   }
 
-
-
- 
   const passwordMatch = await bcrypt.compare(password, user.password);
 
   if (!passwordMatch) {
@@ -49,25 +49,40 @@ app.post('/login', async (req, res) => {
 
 });
 
-app.post(`/todos`, async (req, res) => {
+app.post('/todos', async (req, res) => {
   const { titulo, content, color, completed, email } = req.body;
 
-  const result = await prisma.todos.create({
-    data: {
-      titulo, content, color, completed,
-      author: { connect: { email } },
-    },
-  })
-
-  res.json(result)
+  try {
+    const result = await prisma.todos.create({
+      data: {
+        titulo, content, color, completed,
+        author: { connect: { email } },
+      },
+    })
+  
+    return res.status(200).json(result);
+  } catch (error) {
+    return res.status(500).json({message:" Erro ao criar sua nota"});
+  }
 })
 
 
 app.get('/feedTodos', async (req, res) => {
-  const posts = await prisma.todos.findMany({
-    include: { author: false }
-  })
-  res.json(posts)
+
+  
+  try {
+    const posts = await prisma.todos.findMany({
+      include: { author: false }
+    })
+  
+  
+   return res.status(200).json(posts);
+  } catch (error) {
+    
+   return res.status(500).json({message:"Erro ao fazer a lista da sua listinha"});
+  }
+
+ 
 })
 
 
