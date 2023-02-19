@@ -16,8 +16,11 @@ const express_1 = __importDefault(require("express"));
 const prisma_conect_1 = __importDefault(require("./prisma-conect"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const body_parser_1 = __importDefault(require("body-parser"));
+const cors_1 = __importDefault(require("cors"));
 const app = (0, express_1.default)();
 app.use(body_parser_1.default.json());
+app.use(express_1.default.json());
+app.use((0, cors_1.default)());
 const PORT = process.env.PORT;
 app.post('/signup', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, email, password } = req.body;
@@ -51,11 +54,11 @@ app.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     return res.status(200).json({ message: "Login com sucesso" });
 }));
 app.post('/todos', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { titulo, content, color, completed, email } = req.body;
+    const { titulo, content, color, email } = req.body;
     try {
         const result = yield prisma_conect_1.default.todos.create({
             data: {
-                titulo, content, color, completed,
+                titulo, content, color,
                 author: { connect: { email } },
             },
         });

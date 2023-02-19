@@ -2,12 +2,14 @@ import Express from "express";
 import prisma from "./prisma-conect";
 import bcrypt from 'bcrypt';
 import bodyParser from "body-parser";
+import cors from 'cors';
 
 const app = Express();
 
 
 app.use(bodyParser.json());
 app.use(Express.json());
+app.use(cors());
 
 
 const PORT = process.env.PORT;
