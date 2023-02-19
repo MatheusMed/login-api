@@ -8,6 +8,8 @@ const app = Express();
 
 app.use(bodyParser.json());
 
+const PORT = process.env.PORT;
+
 
 app.post('/signup', async (req, res) => {
   const { name, email, password } = req.body;
@@ -25,7 +27,7 @@ app.post('/signup', async (req, res) => {
  
    res.json(user);
  } catch (error) {
-  return res.status(500).json({message:"Erro ao criar usuario" });
+  return res.status(500).json({message:"Erro ao criar usuario"});
  }
 });
 
@@ -86,6 +88,6 @@ app.get('/feedTodos', async (req, res) => {
 })
 
 
-app.listen(5943, () => {
-  console.log('Server running on http://localhost:5943')
+app.listen(PORT, () => {
+  console.log(`Server running on PORT ${PORT}`)
 })
