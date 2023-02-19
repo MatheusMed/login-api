@@ -18,6 +18,7 @@ const bcrypt_1 = __importDefault(require("bcrypt"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const app = (0, express_1.default)();
 app.use(body_parser_1.default.json());
+const PORT = process.env.PORT;
 app.post('/signup', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, email, password } = req.body;
     try {
@@ -75,6 +76,6 @@ app.get('/feedTodos', (req, res) => __awaiter(void 0, void 0, void 0, function* 
         return res.status(500).json({ message: "Erro ao fazer a lista da sua listinha" });
     }
 }));
-app.listen(5943, () => {
-    console.log('Server running on http://localhost:5943');
+app.listen(PORT, () => {
+    console.log(`Server running on PORT ${PORT}`);
 });
