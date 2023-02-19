@@ -71,20 +71,30 @@ app.post('/todos', async (req, res) => {
 
 app.get('/feedTodos', async (req, res) => {
 
-  
+  const { email } = req.body;
+
   try {
-    const posts = await prisma.todos.findMany({
-      include: { author: false }
-    })
+    const user = await prisma.user.findUnique({
+      where:{ email }
+    });
   
+    if(email == user.email) {
   
-   return res.status(200).json(posts);
+      try {
+        const posts = await prisma.todos.findMany({
+          include: { author: false }
+        })
+      
+      return res.status(200).json(posts);
+      } catch (error) {
+        
+      return res.status(500).json({message:"Erro ao fazer a lista da sua listinha"});
+      }
+    }
   } catch (error) {
-    
-   return res.status(500).json({message:"Erro ao fazer a lista da sua listinha"});
+    return res.status(500).json({message:`Email nao existente`});
   }
 
- 
 })
 
 

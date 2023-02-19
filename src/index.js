@@ -66,14 +66,25 @@ app.post('/todos', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 }));
 app.get('/feedTodos', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { email } = req.body;
     try {
-        const posts = yield prisma_conect_1.default.todos.findMany({
-            include: { author: false }
+        const user = yield prisma_conect_1.default.user.findUnique({
+            where: { email }
         });
-        return res.status(200).json(posts);
+        if (email == user.email) {
+            try {
+                const posts = yield prisma_conect_1.default.todos.findMany({
+                    include: { author: false }
+                });
+                return res.status(200).json(posts);
+            }
+            catch (error) {
+                return res.status(500).json({ message: "Erro ao fazer a lista da sua listinha" });
+            }
+        }
     }
     catch (error) {
-        return res.status(500).json({ message: "Erro ao fazer a lista da sua listinha" });
+        return res.status(500).json({ message: `Email nao existente` });
     }
 }));
 app.listen(PORT, () => {
