@@ -7,6 +7,8 @@ const app = Express();
 
 
 app.use(bodyParser.json());
+app.use(Express.json());
+
 
 const PORT = process.env.PORT;
 
@@ -52,12 +54,12 @@ app.post('/login', async (req, res) => {
 });
 
 app.post('/todos', async (req, res) => {
-  const { titulo, content, color, completed, email } = req.body;
+  const { titulo, content, color,  email } = req.body;
 
   try {
     const result = await prisma.todos.create({
       data: {
-        titulo, content, color, completed,
+        titulo, content, color,
         author: { connect: { email } },
       },
     })
