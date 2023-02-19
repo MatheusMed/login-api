@@ -42,6 +42,8 @@ app.post('/login', async (req, res) => {
     where: { email },
   });
 
+  const token = await prisma.user.findFirst();
+
   if (!user) {
     return res.status(401).json({ message: 'Invalid email or password' });
   }
@@ -51,7 +53,7 @@ app.post('/login', async (req, res) => {
   if (!passwordMatch) {
     return res.status(401).json({message:"Erro, senha errada tente novamente"});
   }
-  return res.status(200).json({message:"Login com sucesso"});
+  return res.status(200).json({message:"Login com sucesso", token:token.token });
 
 });
 

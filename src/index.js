@@ -44,6 +44,7 @@ app.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     const user = yield prisma_conect_1.default.user.findUnique({
         where: { email },
     });
+    const token = yield prisma_conect_1.default.user.findFirst();
     if (!user) {
         return res.status(401).json({ message: 'Invalid email or password' });
     }
@@ -51,7 +52,7 @@ app.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     if (!passwordMatch) {
         return res.status(401).json({ message: "Erro, senha errada tente novamente" });
     }
-    return res.status(200).json({ message: "Login com sucesso" });
+    return res.status(200).json({ message: "Login com sucesso", token: token.token });
 }));
 app.post('/todos', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { titulo, content, color, email } = req.body;

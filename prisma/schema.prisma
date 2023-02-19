@@ -15,6 +15,7 @@ model User {
   name     String
   email    String    @unique
   password String
+  token    String    @default(uuid())
   createAt DateTime? @default(now())
   updateAt DateTime? @updatedAt
   Todos    Todos[]

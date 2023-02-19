@@ -4,8 +4,9 @@ CREATE TABLE "User" (
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
-    "createAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updateAt" TIMESTAMP(3) NOT NULL,
+    "token" TEXT NOT NULL,
+    "createAt" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+    "updateAt" TIMESTAMP(3),
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -16,9 +17,8 @@ CREATE TABLE "Todos" (
     "titulo" TEXT NOT NULL,
     "content" TEXT NOT NULL,
     "color" TEXT NOT NULL,
-    "completed" BOOLEAN NOT NULL DEFAULT false,
-    "createAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updateAt" TIMESTAMP(3) NOT NULL,
+    "createAt" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+    "updateAt" TIMESTAMP(3),
     "authorEmail" TEXT NOT NULL,
 
     CONSTRAINT "Todos_pkey" PRIMARY KEY ("id")
