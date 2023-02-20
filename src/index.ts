@@ -88,6 +88,7 @@ app.get('/feedTodos', async (req, res) => {
   
       try {
         const posts = await prisma.todos.findMany({
+          where:{authorEmail:email},
           include: { author: false }
         })
       
@@ -102,6 +103,44 @@ app.get('/feedTodos', async (req, res) => {
   }
 
 })
+
+
+app.delete('/todos/:id',async (req,resp)=>{
+  const { id } = req.params;
+
+  const { email } = req.body;
+
+  const user = await prisma.user.findUnique({
+    where:{ email }
+  });
+
+  if(email == user.email) {
+  try {
+    await prisma.todos.delete({
+      where: { id: parseInt(id) },
+    });
+    resp.status(200).json({message:  'Todo deletado com sucesso'});
+  } catch (error) {
+    resp.status(500).json({message: 'Ocorreu um erro ao deletar o todo'});
+  }
+}
+})
+
+app.put('/todos/:id', async (req, res) => {
+  const { id } = req.params;
+  const { titulo, content, color  } = req.body;
+
+  try {
+    await prisma.todos.update({
+      where: { id: parseInt(id) },
+      data: { titulo,content,color  },
+    });
+    res.status(200).json('Usuário atualizado com todo');
+
+  } catch (error) {
+    res.status(500).json('Ocorreu um erro ao atualizar o todo');
+  }
+});
 
 
 app.listen(PORT, () => {

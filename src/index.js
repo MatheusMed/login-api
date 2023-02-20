@@ -78,6 +78,7 @@ app.get('/feedTodos', (req, res) => __awaiter(void 0, void 0, void 0, function* 
         if (email == user.email) {
             try {
                 const posts = yield prisma_conect_1.default.todos.findMany({
+                    where: { authorEmail: email },
                     include: { author: false }
                 });
                 return res.status(200).json(posts);
@@ -89,6 +90,38 @@ app.get('/feedTodos', (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
     catch (error) {
         return res.status(500).json({ message: `Email nao existente` });
+    }
+}));
+app.delete('/todos/:id', (req, resp) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const { email } = req.body;
+    const user = yield prisma_conect_1.default.user.findUnique({
+        where: { email }
+    });
+    if (email == user.email) {
+        try {
+            yield prisma_conect_1.default.todos.delete({
+                where: { id: parseInt(id) },
+            });
+            resp.status(200).json({ message: 'Todo deletado com sucesso' });
+        }
+        catch (error) {
+            resp.status(500).json({ message: 'Ocorreu um erro ao deletar o todo' });
+        }
+    }
+}));
+app.put('/todos/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const { titulo, content, color } = req.body;
+    try {
+        yield prisma_conect_1.default.todos.update({
+            where: { id: parseInt(id) },
+            data: { titulo, content, color },
+        });
+        res.status(200).json('Usuário atualizado com todo');
+    }
+    catch (error) {
+        res.status(500).json('Ocorreu um erro ao atualizar o todo');
     }
 }));
 app.listen(PORT, () => {
