@@ -97,7 +97,6 @@ app.post('/alarm', async (req, res) => {
 
 app.get('/alarm', async (req, res) => {
   const { email } = req.body;
-
   try {
     const user = await prisma.user.findUnique({
       where:{ email }
