@@ -119,9 +119,9 @@ app.delete('/todos/:id',async (req,resp)=>{
     await prisma.todos.delete({
       where: { id: parseInt(id) },
     });
-    resp.status(200).json({message:  'Todo deletado com sucesso'});
+    resp.status(200).json({message: 'Todo deletado com sucesso'});
   } catch (error) {
-    resp.status(500).json({message: 'Ocorreu um erro ao deletar o todo'});
+    resp.status(500).json({message:'Ocorreu um erro ao deletar o todo'});
   }
 }
 })
