@@ -69,6 +69,45 @@ app.post('/todos', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         return res.status(500).json({ message: " Erro ao criar sua nota" });
     }
 }));
+app.post('/alarm', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { alarm, email } = req.body;
+    console.log(alarm);
+    try {
+        const result = yield prisma_conect_1.default.alarm.create({
+            data: {
+                alarm,
+                author: { connect: { email } },
+            },
+        });
+        return res.status(200).json(result);
+    }
+    catch (error) {
+        return res.status(500).json({ message: " Erro ao criar seu alarm" });
+    }
+}));
+app.get('/alarm', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { email } = req.body;
+    try {
+        const user = yield prisma_conect_1.default.user.findUnique({
+            where: { email }
+        });
+        if (email == user.email) {
+            try {
+                const posts = yield prisma_conect_1.default.alarm.findMany({
+                    where: { authorEmail: email },
+                    include: { author: false }
+                });
+                return res.status(200).json(posts);
+            }
+            catch (error) {
+                return res.status(500).json({ message: "Erro ao fazer a lista de alarms" });
+            }
+        }
+    }
+    catch (error) {
+        return res.status(500).json({ message: `Email nao existente` });
+    }
+}));
 app.get('/feedTodos', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { email } = req.body;
     try {
