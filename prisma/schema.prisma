@@ -19,6 +19,7 @@ model User {
   createAt DateTime? @default(now())
   updateAt DateTime? @updatedAt
   Todos    Todos[]
+  Alarm    Alarm[]
 }
 
 model Todos {
@@ -29,5 +30,12 @@ model Todos {
   createAt    DateTime? @default(now())
   updateAt    DateTime? @updatedAt
   author      User?     @relation(fields: [authorEmail], references: [email])
+  authorEmail String
+}
+
+model Alarm {
+  id          Int    @id @default(autoincrement())
+  alarm       String
+  author      User?  @relation(fields: [authorEmail], references: [email])
   authorEmail String
 }

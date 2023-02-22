@@ -74,6 +74,54 @@ app.post('/todos', async (req, res) => {
   }
 })
 
+app.post('/alarm', async (req, res) => {
+  const { alarm, email } = req.body;
+
+
+  console.log(alarm);
+
+  try {
+    const result = await prisma.alarm.create({
+      data: {
+        alarm,
+        author: { connect: { email } },
+      },
+    })
+
+    return res.status(200).json(result);
+
+  } catch (error) {
+    return res.status(500).json({message:" Erro ao criar seu alarm"});
+  }
+})
+
+app.get('/alarm', async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    const user = await prisma.user.findUnique({
+      where:{ email }
+    });
+  
+    if(email == user.email) {
+  
+      try {
+        const posts = await prisma.alarm.findMany({
+          where:{authorEmail:email},
+          include: { author: false }
+        })
+      return res.status(200).json(posts);
+
+      } catch (error) {
+        
+      return res.status(500).json({message:"Erro ao fazer a lista de alarms"});
+      }
+    }
+  } catch (error) {
+    return res.status(500).json({message:`Email nao existente`});
+  }
+})
+
 
 app.get('/feedTodos', async (req, res) => {
 
