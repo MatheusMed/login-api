@@ -15,11 +15,11 @@ model User {
   name     String
   email    String    @unique
   password String
-  token    String    @default(uuid())
+  token    String    @unique @default(uuid())
   createAt DateTime? @default(now())
   updateAt DateTime? @updatedAt
   Todos    Todos[]
-  Alarm    Alarm[]
+  Alarms   Alarms[]
 }
 
 model Todos {
@@ -33,7 +33,7 @@ model Todos {
   authorEmail String
 }
 
-model Alarm {
+model Alarms {
   id          Int       @id @default(autoincrement())
   alarm       String
   createAt    DateTime? @default(now())

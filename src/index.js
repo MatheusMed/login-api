@@ -46,7 +46,7 @@ app.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     });
     const token = yield prisma_conect_1.default.user.findFirst();
     if (!user) {
-        return res.status(401).json({ message: 'Invalid email or password' });
+        return res.status(401).json({ message: `Invalid email or password ` });
     }
     const passwordMatch = yield bcrypt_1.default.compare(password, user.password);
     if (!passwordMatch) {
@@ -71,9 +71,8 @@ app.post('/todos', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 }));
 app.post('/alarm', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { alarm, email } = req.body;
-    console.log(alarm);
     try {
-        const result = yield prisma_conect_1.default.alarm.create({
+        const result = yield prisma_conect_1.default.alarms.create({
             data: {
                 alarm,
                 author: { connect: { email } },
@@ -82,7 +81,7 @@ app.post('/alarm', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         return res.status(200).json(result);
     }
     catch (error) {
-        return res.status(500).json({ message: " Erro ao criar seu alarm" });
+        return res.status(500).json({ message: `Erro ao criar seu alarm ${error}` });
     }
 }));
 app.get('/alarm', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -91,21 +90,21 @@ app.get('/alarm', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const user = yield prisma_conect_1.default.user.findUnique({
             where: { email }
         });
-        if (email == user.email) {
+        if (user.token) {
             try {
-                const posts = yield prisma_conect_1.default.alarm.findMany({
+                const posts = yield prisma_conect_1.default.alarms.findMany({
                     where: { authorEmail: email },
                     include: { author: false }
                 });
                 return res.status(200).json(posts);
             }
             catch (error) {
-                return res.status(500).json({ message: "Erro ao fazer a lista de alarms" });
+                return res.status(500).json({ message: "Erro ao trazer a lista de alarms" });
             }
         }
     }
     catch (error) {
-        return res.status(500).json({ message: `Email nao existente` });
+        return res.status(500).json({ message: `Email nao existente ${error}` });
     }
 }));
 app.get('/feedTodos', (req, res) => __awaiter(void 0, void 0, void 0, function* () {

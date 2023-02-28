@@ -45,7 +45,7 @@ app.post('/login', async (req, res) => {
   const token = await prisma.user.findFirst();
 
   if (!user) {
-    return res.status(401).json({ message: 'Invalid email or password' });
+    return res.status(401).json({ message:`Invalid email or password `});
   }
 
   const passwordMatch = await bcrypt.compare(password, user.password);
@@ -77,8 +77,9 @@ app.post('/todos', async (req, res) => {
 app.post('/alarm', async (req, res) => {
   const { alarm, email } = req.body;
 
+
   try {
-    const result = await prisma.alarm.create({
+    const result = await prisma.alarms.create({
       data: {
         alarm,
         author: { connect: { email } },
@@ -88,22 +89,22 @@ app.post('/alarm', async (req, res) => {
     return res.status(200).json(result);
 
   } catch (error) {
-    return res.status(500).json({message:" Erro ao criar seu alarm"});
+    return res.status(500).json({message:`Erro ao criar seu alarm ${error}`});
   }
 })
 
 app.get('/alarm', async (req, res) => {
   const { email } = req.body;
 
-  const user = await prisma.user.findUnique({
-    where:{ email }
-  });
-
   try {
+
+    const user = await prisma.user.findUnique({
+      where:{ email }
+    });
     
-    if(email) {
+    if(user.token) {
       try {
-        const posts = await prisma.alarm.findMany({
+        const posts = await prisma.alarms.findMany({
           where:{authorEmail:email},
           include: { author: false }
         })
