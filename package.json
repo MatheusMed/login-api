@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start:dev": "nodemon --watch 'src/' --exec 'ts-node src/index.ts' -e ts",
+    "vercel-build":"npx prisma migrate deploy",
     "start": "node src/index.js",
     "build": "tsc --project tsconfig.json"
   },
